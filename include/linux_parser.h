@@ -4,10 +4,11 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <map>
 
 namespace LinuxParser {
 // Paths
-const std::string kProcDirectory{"/proc/"};
+const std::string kProcDirectory{"/proc"};
 const std::string kCmdlineFilename{"/cmdline"};
 const std::string kCpuinfoFilename{"/cpuinfo"};
 const std::string kStatusFilename{"/status"};
@@ -30,17 +31,27 @@ std::string Kernel();
 // CPU
 enum CPUStates {
   kUser_ = 0,
-  kNice_,
-  kSystem_,
-  kIdle_,
-  kIOwait_,
-  kIRQ_,
-  kSoftIRQ_,
-  kSteal_,
-  kGuest_,
-  kGuestNice_
+  kNice_ = 1,
+  kSystem_ = 2,
+  kIdle_ = 3 ,
+  kIOwait_ = 4 ,
+  kIRQ_ = 5,
+  kSoftIRQ_= 6,
+  kSteal_ = 7,
+  kGuest_ = 8,
+  kGuestNice_ = 9
 };
-std::vector<std::string> CpuUtilization();
+std::vector<float> CpuUtilization();
+
+enum CPUPidStates {
+  kUtime_ = 13,
+  kStime_ = 14,
+  kCUtime_ = 15,
+  kCStime_ = 16,
+  upTime_ = 21
+};
+
+float  CpuPidUtilization(int);
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
@@ -49,8 +60,8 @@ long IdleJiffies();
 // Processes
 std::string Command(int pid);
 std::string Ram(int pid);
-std::string Uid(int pid);
-std::string User(int pid);
+int Uid(int pid);
+std::map<int,std::string> UserDict();
 long int UpTime(int pid);
 };  // namespace LinuxParser
 
